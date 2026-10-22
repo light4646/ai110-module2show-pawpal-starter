@@ -2,10 +2,22 @@
 
 ## 1. System Design
 
+**Core user actions**
+
+1. Add a pet (name, species, age) to the owner's profile.
+2. Schedule a care task for a pet (walk, feeding, meds, appointment) with a time, duration, priority and how often it repeats.
+3. See today's schedule across all pets, in time order, with warnings when two tasks clash.
+
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+The first UML (`diagrams/uml_draft.mmd`) had four classes:
+
+- **Task** (dataclass): one care activity, holding description, time (`"HH:MM"`), duration, priority, frequency and completion status. It can mark itself complete.
+- **Pet** (dataclass): name, species, age and its own list of tasks, with methods to add and list them.
+- **Owner**: the owner's name and list of pets. It can add/find pets and collect every task across them.
+- **Scheduler**: the "brain". It holds a reference to an Owner and sorts, filters and checks tasks across all pets. It doesn't store tasks itself.
+
+Relationships: an Owner has many Pets, a Pet has many Tasks, and the Scheduler reads from the Owner.
 
 **b. Design changes**
 
