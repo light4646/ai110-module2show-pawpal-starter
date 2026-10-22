@@ -48,6 +48,22 @@ class Task:
     completed: bool = False
     pet_name: str = ""  # filled in by Pet.add_task
 
+    def __post_init__(self) -> None:
+        """Validate fields so bad input fails early instead of breaking sorting later."""
+        try:
+            hours, minutes = map(int, self.time.split(":"))
+        except ValueError:
+            raise ValueError(f"time must be HH:MM, got {self.time!r}") from None
+        if not (0 <= hours < 24 and 0 <= minutes < 60):
+            raise ValueError(f"time must be HH:MM, got {self.time!r}")
+        self.time = f"{hours:02d}:{minutes:02d}"
+        if self.priority not in PRIORITY_RANK:
+            raise ValueError(f"priority must be one of {list(PRIORITY_RANK)}")
+        if self.frequency not in ("once", *RECURRENCE_STEP):
+            raise ValueError("frequency must be once, daily or weekly")
+        if self.duration_minutes <= 0:
+            raise ValueError("duration_minutes must be positive")
+
     def mark_complete(self) -> None:
         """Mark this task as done."""
         self.completed = True
