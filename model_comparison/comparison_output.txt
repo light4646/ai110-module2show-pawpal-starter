@@ -1,0 +1,4 @@
+Both models   completed ['2026-10-20'], created 2026-10-21
+PawPal final  completed ['2026-10-19'], created 2026-10-20
+Both models   missing pet -> ValueError: No pet named 'Ghost'
+PawPal final  missing pet -> ValueError: No pet named Ghost

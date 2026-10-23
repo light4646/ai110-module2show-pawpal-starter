@@ -132,6 +132,17 @@ def test_completing_one_off_task_creates_nothing(owner):
     assert len(owner.get_all_tasks()) == 4
 
 
+def test_completing_picks_earliest_pending_copy():
+    pet = Pet("Mochi", "dog")
+    pet.add_task(Task("Walk", "07:30", frequency="daily", due_date=TODAY + timedelta(days=1)))
+    pet.add_task(Task("Walk", "07:30", frequency="daily", due_date=TODAY))
+    owner = Owner("Sam")
+    owner.add_pet(pet)
+    follow_up = Scheduler(owner).mark_task_complete("Mochi", "Walk")
+    assert [t.due_date for t in pet.tasks if t.completed] == [TODAY]
+    assert follow_up.due_date == TODAY + timedelta(days=1)
+
+
 def test_completing_unknown_task_raises(owner):
     with pytest.raises(ValueError):
         Scheduler(owner).mark_task_complete("Luna", "Bath")

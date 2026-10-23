@@ -1,7 +1,7 @@
 """PawPal+ logic layer: Owner, Pet, Task and Scheduler classes."""
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -81,10 +81,7 @@ class Task:
         step = RECURRENCE_STEP.get(self.frequency)
         if step is None:
             return None
-        return Task(
-            self.description, self.time, self.duration_minutes, self.priority,
-            self.frequency, self.due_date + step, False, self.pet_name,
-        )
+        return replace(self, due_date=self.due_date + step, completed=False)
 
     def to_dict(self) -> dict:
         """Serialize to a JSON-friendly dict."""
